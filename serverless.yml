@@ -1,0 +1,43 @@
+# For full config options, check the docs: docs.serverless.com
+
+# See the following link for details and examples on using API Endpoints
+# with Serverlesson AWS Lambda:
+# https://www.serverless.com/framework/docs/providers/aws/events/apigateway/
+
+service: auditlog-api
+frameworkVersion: "=1.70.0"
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-sentry
+
+custom:
+  sentry:
+    dsn: https://1504b932aac241b9829ac8f543e703b6:75170a5ff33d46588e863e59992372cf@sentry.io/300108
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'local'}
+  region: us-east-1
+  profile: auditlogs-api-serverless
+  environment: ${file(./env.yaml):${opt:stage, self:provider.stage}}
+  apiKeys:
+    - value: ${file(./env.yaml):${opt:stage, self:provider.stage}:api_key}
+
+functions:
+  index-logs:
+    handler: src/handlers/logs.index
+    events:
+      - http:
+          path: logs/
+          method: get
+          private:
+
+  create-logs:
+    handler: src/handlers/logs.create
+    events:
+      - http:
+          path: logs/
+          method: post
