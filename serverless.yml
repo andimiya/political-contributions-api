@@ -28,7 +28,7 @@ provider:
 
 functions:
   index-logs:
-    name: index-logs-${opt:stage}
+    name: index-logs-${opt:stage, self:provider.stage}
     handler: src/handlers/logs.index
     events:
       - http:
@@ -37,7 +37,7 @@ functions:
           private:
 
   create-logs:
-    name: create-logs-${opt:stage}
+    name: create-logs-${opt:stage, self:provider.stage}
     handler: src/handlers/logs.create
     events:
       - http:
