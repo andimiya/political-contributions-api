@@ -34,7 +34,7 @@ functions:
       - http:
           path: logs/
           method: get
-          private:
+          private: true
 
   create-logs:
     name: create-logs-${opt:stage, self:provider.stage}
@@ -43,3 +43,4 @@ functions:
       - http:
           path: logs/
           method: post
+          private: true
