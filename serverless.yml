@@ -20,7 +20,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'local'}
-  region: us-west-1
+  region: us-west-2
   profile: auditlogs-api-serverless
   environment: ${file(./env.yaml):${opt:stage, self:provider.stage}}
   apiKeys:
