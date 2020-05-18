@@ -5,7 +5,8 @@
   "description": "",
   "scripts": {
     "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix"
+    "lint:fix": "eslint src/ --fix",
+    "migrate": "babel src --out-dir dist && AWS_PROFILE=auditlogs-api-serverless typeorm migration:run"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +16,14 @@
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/plugin-transform-async-to-generator": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/polyfill": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
-    "eslint": "^6.2.3",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
@@ -31,10 +34,17 @@
     "serverless-offline": "^6.1.5",
     "serverless-sentry": "^1.2.0",
     "serverless-webpack": "^5.3.2",
-    "webpack": "^4.43.0"
+    "tslib": "^1.11.2",
+    "webpack": "^4.43.0",
+    "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
     "raven": "^2.6.4",
-    "serverless-sentry-lib": "^1.1.2"
+    "serverless-sentry-lib": "^1.1.2",
+    "typeorm": "^0.2.24",
+    "typeorm-aurora-data-api-driver": "^1.2.0"
+  },
+  "resolutions": {
+    "tslib": "1.11.2"
   }
 }
