@@ -8,9 +8,8 @@ service: auditlog-api
 frameworkVersion: "=1.70.0"
 
 plugins:
-  - serverless-webpack
+  - serverless-plugin-typescript
   - serverless-offline
-  - serverless-sentry
 
 custom:
   sentry:

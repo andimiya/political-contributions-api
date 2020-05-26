@@ -4,27 +4,20 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix",
-    "migrate": "babel src --out-dir dist && AWS_PROFILE=auditlogs-api-serverless typeorm migration:run"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config ormconfig.local.ts",
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ext ts --fix",
+    "db:migrate:local": "npm run typeorm migration:run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/node": "^7.8.7",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/plugin-transform-async-to-generator": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.9.6",
-    "@babel/polyfill": "^7.8.7",
-    "@babel/preset-env": "^7.9.6",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
+    "@types/aws-lambda": "^8.10.17",
+    "@types/node": "^10.12.18",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.20.0",
@@ -32,17 +25,20 @@
     "serverless": "^1.70.0",
     "serverless-http": "^2.4.1",
     "serverless-offline": "^6.1.5",
-    "serverless-sentry": "^1.2.0",
+    "serverless-plugin-typescript": "^1.1.9",
     "serverless-webpack": "^5.3.2",
+    "ts-loader": "^7.0.4",
+    "ts-node": "^8.10.1",
+    "tsconfig-paths": "^3.9.0",
     "tslib": "^1.11.2",
-    "webpack": "^4.43.0",
-    "webpack-filter-warnings-plugin": "^1.2.1"
+    "typescript": "^3.9.3"
   },
   "dependencies": {
-    "raven": "^2.6.4",
-    "serverless-sentry-lib": "^1.1.2",
-    "typeorm": "^0.2.24",
-    "typeorm-aurora-data-api-driver": "^1.2.0"
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.12.2",
+    "pg": "^8.2.1",
+    "source-map-support": "^0.5.10",
+    "typeorm": "^0.2.25"
   },
   "resolutions": {
     "tslib": "1.11.2"
