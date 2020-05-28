@@ -17,6 +17,9 @@
 #### Load environemnt specific credentials
 Get a copy of `env.yaml` (currently in 1Password) and place it in the root directory of the application
 
+#### Setup Database
+You'll need Postgres running on your local machine. Once installed, manually create a database `auditlogs_api_db_local` - Once the DB is created you can run `npm run db:migrate:local` for migrations
+
 ## Run/Debug
 
 | Command               | Description                                                              |
@@ -25,6 +28,7 @@ Get a copy of `env.yaml` (currently in 1Password) and place it in the root direc
 | sls invoke local --function nameOfFunction | Allows you to run specific functions                |
 | npm run lint                               | Run ESLint                                          |
 | npm run lint:fix                           | Run ESLint and automatically fix problems.          |
+| npm run db:migrate:local                   | Run migrations on local database                    |
 
 
 ## Deploy

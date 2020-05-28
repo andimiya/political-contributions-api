@@ -1,13 +1,17 @@
 module.exports = {
-  "parser": "babel-eslint",
-  "extends": "airbnb-base",
-  "rules": {
-    "no-console": "off",
-    "max-len": ["error", { "code": 160 }]
+  env: {
+    node: true,
   },
-  "parserOptions": {
-      "ecmaFeatures": {
-        "legacyDecorators": true
-      }
-    }
+  extends: [
+    'airbnb-typescript/base',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  parserOptions: {
+    project: './tsconfig.json',
+  },
+  ignorePatterns: ['node_modules/', '.build/', '.serverless/'],
+  rules: {
+    '@typescript-eslint/no-explicit-any': 0,
+  }
 };
