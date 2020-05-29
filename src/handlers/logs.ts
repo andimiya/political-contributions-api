@@ -1,5 +1,5 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import { createRawLog } from '../services/RawLogService';
+import RawLogService from '../services/RawLogService';
 
 const index = async (): Promise<any> => {
   const response = {
@@ -14,11 +14,12 @@ const index = async (): Promise<any> => {
 const create = async (event: APIGatewayEvent): Promise<any> => {
   let response;
   try {
-    await createRawLog(event);
+    const rawLogService = new RawLogService(event);
+    const responseBody = await rawLogService.createRawLog();
     response = {
       statusCode: 201,
       headers: {},
-      body: JSON.stringify({ message: 'Log Created' }),
+      body: JSON.stringify(responseBody),
     };
   } catch (e) {
     response = {

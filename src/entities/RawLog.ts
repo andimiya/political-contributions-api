@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsEnum,
   Validate,
-  validateOrReject,
+  validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import IsMccmnc from '../lib/validators/isMccmncValidator';
@@ -136,11 +136,24 @@ export class RawLog {
 
   validationErrors;
 
+  validationErrorMessages;
+
+
   async isValid(): Promise<boolean> {
-    try {
-      await validateOrReject(this);
-    } catch (errors) {
+    const errors = await validate(this);
+    if (errors && errors.length > 0) {
       this.validationErrors = errors;
+      this.validationErrorMessages = [];
+
+      errors.forEach((err) => {
+        if (!err.constraints) return;
+
+        Object.keys(err.constraints).forEach((key) => {
+          if (!err || !err.constraints || !err.constraints[key]) return; // because TypeScript
+          this.validationErrorMessages.push(`${err.property}: ${err.constraints[key]}`);
+        });
+      });
+
       return false;
     }
     return true;
