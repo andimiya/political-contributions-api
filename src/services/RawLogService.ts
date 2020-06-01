@@ -3,7 +3,9 @@
 
 import { APIGatewayEvent } from 'aws-lambda';
 import dbConnect from '../lib/dbConnect';
-import { RawLog, API, STATUS } from '../entities/RawLog';
+import { RawLog } from '../entities/RawLog';
+import RawLogParser from '../lib/RawLog/RawLogParser';
+import validateAuthorizeApi from '../lib/RawLog/validateAuthorizeApi';
 import RawLogParam from '../interfaces/RawLogParam';
 import InvalidRawLogResponse from '../interfaces/InvalidRawLogResponse';
 import RawLogResponse from '../interfaces/RawLogResponse';
@@ -22,23 +24,12 @@ export default class RawLogService {
   async createRawLog(): Promise<RawLogResponse> {
     db = (db || await dbConnect());
 
-    await Promise.all(this.logs.map(log => this.validateAndSave(log)))
+    await Promise.all(this.logs.map((log) => this.validateAndSave(log)));
 
     return {
       record_count: this.validLogs,
       errors: this.invalidLogs,
     };
-  }
-
-  static assignRawLogParams(params: RawLogParam): RawLog {
-    const rawLog = new RawLog();
-    rawLog.api = API[params.api];
-    rawLog.mccmnc = params.mccmnc;
-    rawLog.timestamp = (new Date(params.timestamp));
-    rawLog.status = (params.status ? STATUS[params.status] : null);
-    rawLog.client_id = params.client_id;
-
-    return rawLog;
   }
 
   static invalidLogResponse(rawLog: RawLog, log: RawLogParam): InvalidRawLogResponse {
@@ -55,10 +46,27 @@ export default class RawLogService {
     };
   }
 
+  isValidApi(rawLog: RawLog): boolean { // eslint-disable-line class-methods-use-this
+    switch (rawLog.apiType()) {
+      case 'authorize':
+        return validateAuthorizeApi(rawLog);
+      default:
+        return false;
+    }
+  }
+
+  async isValid(rawLog: RawLog): Promise<boolean> {
+    return (
+      await rawLog.isValid() // Check Model Validations
+      && this.isValidApi(rawLog) // Check API Specific Validations
+    );
+  }
+
   async validateAndSave(log: RawLogParam): Promise<any> {
     try {
-      const rawLog = RawLogService.assignRawLogParams(log);
-      if (await rawLog.isValid()) {
+      const rawLog = RawLogParser(log);
+
+      if (await this.isValid(rawLog)) {
         db.getRepository(RawLog).save(rawLog);
         this.validLogs += 1;
       } else {

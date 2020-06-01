@@ -10,37 +10,43 @@ import {
   validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
-import IsMccmnc from '../lib/validators/isMccmncValidator';
+import IsMccmnc from '../validators/isMccmncValidator';
 
 export enum API {
-  AUTHORIZE = 0,
-  TOKEN = 1,
-  USERINFO = 2,
-  USERINFO2 = 3,
-  USERTRAIT = 4,
-  CREATE = 5,
-  PROVISION = 6
+  authorize = 0,
+  token = 1,
+  userinfo = 2,
+  userinfo2 = 3,
+  usertrait = 4,
+  create = 5,
+  provision = 6
 }
 
 export enum FLOW {
-  PR = 0,
-  SE = 1,
-  SI = 2
+  pr = 0,
+  se = 1,
+  si = 2
 }
 
 export enum STATUS {
-  SUCCESS = 0,
-  FAIL = 1
+  success = 0,
+  fail = 1
 }
 
 @Entity({ name: 'raw_logs' })
 export class RawLog {
+  constructor() {
+    this.validationErrorMessages = [];
+  }
+
+
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @Column({
     type: 'integer',
     enum: API,
+    nullable: false,
   })
   @IsEnum(API)
   api?: API;
@@ -53,6 +59,14 @@ export class RawLog {
   @IsEnum(FLOW)
   @IsOptional()
   flow?: FLOW;
+
+  @Column({
+    type: 'integer',
+    enum: STATUS,
+    nullable: false,
+  })
+  @IsEnum(STATUS)
+  status?: STATUS;
 
   @Column('integer')
   @Validate(IsMccmnc)
@@ -77,12 +91,10 @@ export class RawLog {
   @IsOptional()
   correlation_id?: string;
 
-  @Column({
-    type: 'integer',
-    enum: STATUS,
-  })
-  @IsEnum(STATUS)
-  status?: STATUS;
+  @Column('varchar', { nullable: true })
+  @IsString()
+  @IsOptional()
+  usertrait?: string;
 
   @Column('varchar', { nullable: true })
   @IsString()
@@ -134,22 +146,17 @@ export class RawLog {
   @IsOptional()
   readonly updated_at?: Date;
 
-  validationErrors;
-
-  validationErrorMessages;
-
 
   async isValid(): Promise<boolean> {
     const errors = await validate(this);
     if (errors && errors.length > 0) {
       this.validationErrors = errors;
-      this.validationErrorMessages = [];
 
       errors.forEach((err) => {
         if (!err.constraints) return;
 
         Object.keys(err.constraints).forEach((key) => {
-          if (!err || !err.constraints || !err.constraints[key]) return; // because TypeScript
+          if (!err?.constraints?.[key]) return;
           this.validationErrorMessages.push(`${err.property}: ${err.constraints[key]}`);
         });
       });
@@ -158,4 +165,13 @@ export class RawLog {
     }
     return true;
   }
+
+  apiType(): string {
+    if (this.api === undefined) return '';
+    return API[this.api.toString()];
+  }
+
+  validationErrors;
+
+  validationErrorMessages;
 }

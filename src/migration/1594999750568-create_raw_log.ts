@@ -110,6 +110,11 @@ export class CreateRawLogs1574118091844 implements MigrationInterface {
             isNullable: false,
             default: 'CURRENT_TIMESTAMP',
           },
+          {
+            name: 'usertrait',
+            type: 'varchar',
+            isNullable: true,
+          },
         ],
       }),
       true,
