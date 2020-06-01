@@ -3,19 +3,16 @@ import sharedApiValidator from './sharedApiValidator';
 
 const requiredParams = [
   'api',
-  'flow',
   'mccmnc',
-  'scopes',
+  'event',
   'timestamp',
   'client_id',
-  'redirect_uri',
   'correlation_id',
   'status',
   'sub',
-  'acr_value',
 ];
 
-export default function validateAuthorizeApi(rawLog: RawLog): boolean {
+export default function validateSetApi(rawLog: RawLog): boolean {
   return sharedApiValidator(requiredParams, rawLog);
   // && otherCustomValidations
 }

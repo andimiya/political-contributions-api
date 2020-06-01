@@ -5,10 +5,10 @@ import { APIGatewayEvent } from 'aws-lambda';
 import dbConnect from '../lib/dbConnect';
 import { RawLog } from '../entities/RawLog';
 import RawLogParser from '../lib/RawLog/RawLogParser';
-import validateAuthorizeApi from '../lib/RawLog/validateAuthorizeApi';
 import RawLogParam from '../interfaces/RawLogParam';
 import InvalidRawLogResponse from '../interfaces/InvalidRawLogResponse';
 import RawLogResponse from '../interfaces/RawLogResponse';
+import apiValidators from '../lib/RawLog/apiValidators';
 
 let db; // Memoize db - lambda can reuse this
 
@@ -49,9 +49,23 @@ export default class RawLogService {
   isValidApi(rawLog: RawLog): boolean { // eslint-disable-line class-methods-use-this
     switch (rawLog.apiType()) {
       case 'authorize':
-        return validateAuthorizeApi(rawLog);
+        return apiValidators.validateAuthorizeApi(rawLog);
+      case 'token':
+        return apiValidators.validateTokenApi(rawLog);
+      case 'userinfo':
+        return apiValidators.validateUserinfoApi(rawLog);
+      case 'userinfo2':
+        return apiValidators.validateUserinfoApi(rawLog);
+      case 'set':
+        return apiValidators.validateSetApi(rawLog);
+      case 'usertrait':
+        return apiValidators.validateUsertraitApi(rawLog);
+      case 'create':
+        return apiValidators.validateCreateApi(rawLog);
+      case 'provision':
+        return apiValidators.validateProvisionApi(rawLog);
       default:
-        return false;
+        throw new Error('Provided API does not exist');
     }
   }
 

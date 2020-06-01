@@ -15,7 +15,7 @@ const requiredParams = [
   'acr_value',
 ];
 
-export default function validateAuthorizeApi(rawLog: RawLog): boolean {
+export default function validateCreateApi(rawLog: RawLog): boolean {
   return sharedApiValidator(requiredParams, rawLog);
   // && otherCustomValidations
 }

@@ -19,7 +19,8 @@ export enum API {
   userinfo2 = 3,
   usertrait = 4,
   create = 5,
-  provision = 6
+  provision = 6,
+  set = 7
 }
 
 export enum FLOW {
