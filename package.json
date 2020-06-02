@@ -37,6 +37,7 @@
   "dependencies": {
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
+    "moment": "^2.26.0",
     "pg": "^8.2.1",
     "source-map-support": "^0.5.10",
     "typeorm": "^0.2.25"

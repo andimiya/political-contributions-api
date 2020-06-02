@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index,
 } from 'typeorm';
 import {
   IsString,
@@ -35,6 +35,7 @@ export enum STATUS {
 }
 
 @Entity({ name: 'raw_logs' })
+@Index('raw_logs_uniqueness_index', { synchronize: false })
 export class RawLog {
   constructor() {
     this.validationErrorMessages = [];
