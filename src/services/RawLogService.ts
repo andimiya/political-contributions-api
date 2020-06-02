@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/prefer-default-export */
 
-import { APIGatewayEvent } from 'aws-lambda';
 import dbConnect from '../lib/dbConnect';
 import { RawLog } from '../entities/RawLog';
 import RawLogParser from '../lib/RawLog/RawLogParser';
@@ -9,14 +8,14 @@ import RawLogParam from '../interfaces/RawLogParam';
 import InvalidRawLogResponse from '../interfaces/InvalidRawLogResponse';
 import RawLogResponse from '../interfaces/RawLogResponse';
 import apiValidators from '../lib/RawLog/apiValidators';
+import mccmnc from '../lib/mccmnc';
 
 let db; // Memoize db - lambda can reuse this
 
 export default class RawLogService {
-  constructor(event: APIGatewayEvent) {
-    if (!event.body) { throw new Error('Must provide body params'); }
-
-    this.logs = JSON.parse(event.body).audit_log;
+  constructor(logs: RawLogParam[], carrierPath: string) {
+    this.logs = logs;
+    this.carrierPath = carrierPath;
     this.validLogs = 0;
     this.invalidLogs = [];
   }
@@ -69,9 +68,18 @@ export default class RawLogService {
     }
   }
 
+  pathMatchesMccmnc(rawLog: RawLog): boolean {
+    if (rawLog.mccmnc !== undefined && `/${mccmnc[rawLog?.mccmnc]}` === this.carrierPath) return true;
+
+    const errMsg = `Provided MCCMNC does not match the request path ${this.carrierPath}`;
+    rawLog.validationErrorMessages.push(errMsg);
+    return false;
+  }
+
   async isValid(rawLog: RawLog): Promise<boolean> {
     return (
-      await rawLog.isValid() // Check Model Validations
+      this.pathMatchesMccmnc(rawLog) // Validate log's MCCMNC against request path
+      && await rawLog.isValid() // Check Model Validations
       && this.isValidApi(rawLog) // Check API Specific Validations
     );
   }
@@ -101,4 +109,6 @@ export default class RawLogService {
   invalidLogs;
 
   rawLogRepo;
+
+  carrierPath;
 }

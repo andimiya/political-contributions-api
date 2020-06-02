@@ -1,20 +1,15 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import RawLogService from '../services/RawLogService';
 
-const index = async (): Promise<any> => {
-  const response = {
-    statusCode: 200,
-    headers: {},
-    body: JSON.stringify({ message: 'Logs Index Endpoint' }),
-  };
-
-  return response;
-};
 
 const create = async (event: APIGatewayEvent): Promise<any> => {
   let response;
+
   try {
-    const rawLogService = new RawLogService(event);
+    if (!event.body) { throw new Error('Must provide body params'); }
+
+    const logs = JSON.parse(event.body).audit_log;
+    const rawLogService = new RawLogService(logs, event.path);
     const responseBody = await rawLogService.createRawLog();
     response = {
       statusCode: 201,
@@ -34,6 +29,5 @@ const create = async (event: APIGatewayEvent): Promise<any> => {
 
 
 export {
-  index,
   create,
 };

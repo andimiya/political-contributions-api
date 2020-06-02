@@ -26,20 +26,23 @@ provider:
     - value: ${file(./env.yaml):${opt:stage, self:provider.stage}.api_key}
 
 functions:
-  index-logs:
-    name: index-logs-${opt:stage, self:provider.stage}
-    handler: src/handlers/logs.index
-    events:
-      - http:
-          path: logs/
-          method: get
-          private: true
-
   create-logs:
     name: create-logs-${opt:stage, self:provider.stage}
     handler: src/handlers/logs.create
     events:
       - http:
-          path: logs/
+          path: att/
+          method: post
+          private: true
+      - http:
+          path: tmobile/
+          method: post
+          private: true
+      - http:
+          path: verizon/
+          method: post
+          private: true
+      - http:
+          path: sprint/
           method: post
           private: true
