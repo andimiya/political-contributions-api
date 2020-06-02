@@ -89,7 +89,7 @@ export default class RawLogService {
       const rawLog = RawLogParser(log);
 
       if (await this.isValid(rawLog)) {
-        db.getRepository(RawLog).save(rawLog);
+        await db.getRepository(RawLog).save(rawLog);
         this.validLogs += 1;
       } else {
         const invalidLogResp = RawLogService.invalidLogResponse(rawLog, log);

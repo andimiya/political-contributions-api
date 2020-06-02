@@ -5,7 +5,7 @@ import {
   MigrationInterface, QueryRunner, Table,
 } from 'typeorm';
 
-export class CreateRawLogs1574118091844 implements MigrationInterface {
+export class CreateRawLogs1591113478512 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.createTable(
       new Table({
@@ -25,7 +25,7 @@ export class CreateRawLogs1574118091844 implements MigrationInterface {
           {
             name: 'flow',
             type: 'integer',
-            default: 0,
+            isNullable: false,
           },
           {
             name: 'mccmnc',
@@ -40,7 +40,7 @@ export class CreateRawLogs1574118091844 implements MigrationInterface {
           {
             name: 'client_id',
             type: 'varchar',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'redirect_uri',
@@ -50,12 +50,11 @@ export class CreateRawLogs1574118091844 implements MigrationInterface {
           {
             name: 'correlation_id',
             type: 'varchar',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'status',
             type: 'integer',
-            default: 0,
             isNullable: false,
           },
           {
@@ -71,7 +70,7 @@ export class CreateRawLogs1574118091844 implements MigrationInterface {
           {
             name: 'sub',
             type: 'text',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'context',

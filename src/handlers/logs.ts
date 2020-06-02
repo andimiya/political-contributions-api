@@ -29,5 +29,5 @@ const create = async (event: APIGatewayEvent): Promise<any> => {
 
 
 export {
-  create,
+  create, // eslint-disable-line import/prefer-default-export
 };

@@ -1,11 +1,19 @@
+import * as moment from 'moment';
 import {
   RawLog, API, STATUS, FLOW,
 } from '../../entities/RawLog';
 import RawLogParam from '../../interfaces/RawLogParam';
 
-export default function RawLogParser(params: RawLogParam): RawLog {
-  const rawLog = new RawLog();
+function validateTimestampGranularity(timestamp: Date): any {
+  if (moment(timestamp, 'YYYY-MM-DD HH:mm:ss:SS', true).isValid()) return;
 
+  throw new Error('Timestamp must be in \'YYYY-MM-DD HH:mm:ss:SS\' format');
+}
+
+export default function RawLogParser(params: RawLogParam): RawLog {
+  validateTimestampGranularity(params.timestamp);
+
+  const rawLog = new RawLog();
   if (params.flow !== undefined) {
     rawLog.flow = FLOW[params.flow.toLowerCase()];
   }
