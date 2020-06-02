@@ -1,7 +1,7 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["validate", "defaultMessage"] }] */
 
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-import mccmncList from '../mccmnc';
+import mccmncList from '../lib/mccmnc';
 
 @ValidatorConstraint({ name: 'isMccmnc', async: false })
 export default class IsMccmnc implements ValidatorConstraintInterface {

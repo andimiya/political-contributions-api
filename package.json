@@ -7,7 +7,8 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config ormconfig.local.ts",
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext ts --fix",
-    "db:migrate:local": "npm run typeorm migration:run"
+    "db:migrate:local": "npm run typeorm migration:run",
+    "db:drop:local": "npm run typeorm schema:drop"
   },
   "keywords": [],
   "author": "",

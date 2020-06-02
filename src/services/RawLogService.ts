@@ -3,10 +3,12 @@
 
 import { APIGatewayEvent } from 'aws-lambda';
 import dbConnect from '../lib/dbConnect';
-import { RawLog, API, STATUS } from '../entities/RawLog';
+import { RawLog } from '../entities/RawLog';
+import RawLogParser from '../lib/RawLog/RawLogParser';
 import RawLogParam from '../interfaces/RawLogParam';
 import InvalidRawLogResponse from '../interfaces/InvalidRawLogResponse';
 import RawLogResponse from '../interfaces/RawLogResponse';
+import apiValidators from '../lib/RawLog/apiValidators';
 
 let db; // Memoize db - lambda can reuse this
 
@@ -22,23 +24,12 @@ export default class RawLogService {
   async createRawLog(): Promise<RawLogResponse> {
     db = (db || await dbConnect());
 
-    await Promise.all(this.logs.map(log => this.validateAndSave(log)))
+    await Promise.all(this.logs.map((log) => this.validateAndSave(log)));
 
     return {
       record_count: this.validLogs,
       errors: this.invalidLogs,
     };
-  }
-
-  static assignRawLogParams(params: RawLogParam): RawLog {
-    const rawLog = new RawLog();
-    rawLog.api = API[params.api];
-    rawLog.mccmnc = params.mccmnc;
-    rawLog.timestamp = (new Date(params.timestamp));
-    rawLog.status = (params.status ? STATUS[params.status] : null);
-    rawLog.client_id = params.client_id;
-
-    return rawLog;
   }
 
   static invalidLogResponse(rawLog: RawLog, log: RawLogParam): InvalidRawLogResponse {
@@ -55,10 +46,41 @@ export default class RawLogService {
     };
   }
 
+  isValidApi(rawLog: RawLog): boolean { // eslint-disable-line class-methods-use-this
+    switch (rawLog.apiType()) {
+      case 'authorize':
+        return apiValidators.validateAuthorizeApi(rawLog);
+      case 'token':
+        return apiValidators.validateTokenApi(rawLog);
+      case 'userinfo':
+        return apiValidators.validateUserinfoApi(rawLog);
+      case 'userinfo2':
+        return apiValidators.validateUserinfoApi(rawLog);
+      case 'set':
+        return apiValidators.validateSetApi(rawLog);
+      case 'usertrait':
+        return apiValidators.validateUsertraitApi(rawLog);
+      case 'create':
+        return apiValidators.validateCreateApi(rawLog);
+      case 'provision':
+        return apiValidators.validateProvisionApi(rawLog);
+      default:
+        throw new Error('Provided API does not exist');
+    }
+  }
+
+  async isValid(rawLog: RawLog): Promise<boolean> {
+    return (
+      await rawLog.isValid() // Check Model Validations
+      && this.isValidApi(rawLog) // Check API Specific Validations
+    );
+  }
+
   async validateAndSave(log: RawLogParam): Promise<any> {
     try {
-      const rawLog = RawLogService.assignRawLogParams(log);
-      if (await rawLog.isValid()) {
+      const rawLog = RawLogParser(log);
+
+      if (await this.isValid(rawLog)) {
         db.getRepository(RawLog).save(rawLog);
         this.validLogs += 1;
       } else {
