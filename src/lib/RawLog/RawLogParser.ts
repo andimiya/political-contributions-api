@@ -14,13 +14,13 @@ export default function RawLogParser(params: RawLogParam): RawLog {
   validateTimestampGranularity(params.timestamp);
 
   const rawLog = new RawLog();
-  if (params.flow !== undefined) {
+  if (params.flow != undefined) { // eslint-disable-line eqeqeq
     rawLog.flow = FLOW[params.flow.toLowerCase()];
   }
-  if (typeof params.api !== undefined) {
+  if (params.api != undefined) { // eslint-disable-line eqeqeq
     rawLog.api = API[params.api.toLowerCase()];
   }
-  if (params.status !== undefined) {
+  if (params.status != undefined) { // eslint-disable-line eqeqeq
     rawLog.status = STATUS[params.status.toLowerCase()];
   }
   rawLog.mccmnc = params.mccmnc;

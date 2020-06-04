@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/prefer-default-export */
 
-import dbConnect from '../lib/dbConnect';
+import { Connection } from 'typeorm';
 import { RawLog } from '../entities/RawLog';
 import RawLogParser from '../lib/RawLog/RawLogParser';
 import RawLogParam from '../interfaces/RawLogParam';
@@ -10,10 +10,10 @@ import RawLogResponse from '../interfaces/RawLogResponse';
 import apiValidators from '../lib/RawLog/apiValidators';
 import mccmnc from '../lib/mccmnc';
 
-let db; // Memoize db - lambda can reuse this
 
 export default class RawLogService {
-  constructor(logs: RawLogParam[], carrierPath: string) {
+  constructor(logs: RawLogParam[], carrierPath: string, db: Connection) {
+    this.db = db;
     this.logs = logs;
     this.carrierPath = carrierPath;
     this.validLogs = 0;
@@ -21,8 +21,6 @@ export default class RawLogService {
   }
 
   async createRawLog(): Promise<RawLogResponse> {
-    db = (db || await dbConnect());
-
     await Promise.all(this.logs.map((log) => this.validateAndSave(log)));
 
     return {
@@ -89,7 +87,7 @@ export default class RawLogService {
       const rawLog = RawLogParser(log);
 
       if (await this.isValid(rawLog)) {
-        await db.getRepository(RawLog).save(rawLog);
+        await this.db.getRepository(RawLog).save(rawLog);
         this.validLogs += 1;
       } else {
         const invalidLogResp = RawLogService.invalidLogResponse(rawLog, log);
@@ -102,6 +100,8 @@ export default class RawLogService {
   }
 
   // Instance Variable Definitions
+  db;
+
   logs;
 
   validLogs;

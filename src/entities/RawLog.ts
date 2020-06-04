@@ -26,7 +26,8 @@ export enum API {
 export enum FLOW {
   pr = 0,
   se = 1,
-  si = 2
+  si = 2,
+  none = 3,
 }
 
 export enum STATUS {
@@ -43,7 +44,7 @@ export class RawLog {
 
 
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   @Column({
     type: 'integer',
@@ -51,16 +52,17 @@ export class RawLog {
     nullable: false,
   })
   @IsEnum(API)
-  api?: API;
+  api: API;
 
   @Column({
     type: 'integer',
     enum: FLOW,
-    nullable: true,
+    nullable: false,
+    default: FLOW.none,
   })
   @IsEnum(FLOW)
   @IsOptional()
-  flow?: FLOW;
+  flow: FLOW;
 
   @Column({
     type: 'integer',
@@ -68,15 +70,15 @@ export class RawLog {
     nullable: false,
   })
   @IsEnum(STATUS)
-  status?: STATUS;
+  status: STATUS;
 
-  @Column('integer')
+  @Column('integer', { nullable: false })
   @Validate(IsMccmnc)
-  mccmnc?: number;
+  mccmnc: number;
 
-  @Column('timestamp')
+  @Column('timestamp', { nullable: false })
   @IsDate()
-  timestamp?: Date;
+  timestamp: Date;
 
   @Column('varchar', { nullable: true })
   @IsString()
