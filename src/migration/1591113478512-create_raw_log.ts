@@ -26,6 +26,7 @@ export class CreateRawLogs1591113478512 implements MigrationInterface {
             name: 'flow',
             type: 'integer',
             isNullable: false,
+            default: 3,
           },
           {
             name: 'mccmnc',

@@ -26,6 +26,13 @@ provider:
     - value: ${file(./env.yaml):${opt:stage, self:provider.stage}.api_key}
 
 functions:
+  test:
+    name: test-${opt:stage, self:provider.stage}
+    handler: src/handlers/logs.test
+    events:
+      - http:
+          path: test/
+          method: get
   create-logs:
     name: create-logs-${opt:stage, self:provider.stage}
     handler: src/handlers/logs.create

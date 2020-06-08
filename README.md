@@ -22,13 +22,15 @@ You'll need Postgres running on your local machine. Once installed, manually cre
 
 ## Run/Debug
 
-| Command               | Description                                                              |
-|-----------------------|--------------------------------------------------------------------------|
-| sls offline                                | Starts a local server you can query on localhost    |
-| sls invoke local --function nameOfFunction | Allows you to run specific functions                |
-| npm run lint                               | Run ESLint                                          |
-| npm run lint:fix                           | Run ESLint and automatically fix problems.          |
-| npm run db:migrate:local                   | Run migrations on local database                    |
+| Command                                                | Description                                         |
+|--------------------------------------------------------|-----------------------------------------------------|
+| sls offline                                            | Starts a local server you can query on localhost    |
+| sls invoke local --function nameOfFunction             | Allows you to run specific functions                |
+| npm run lint                                           | Run ESLint                                          |
+| npm run lint:fix                                       | Run ESLint and automatically fix problems.          |
+| npm run db:migrate                                     | Run migrations on local database                    |
+| npm run typeorm migration:create -- -n NameOfMigration | Create migration file                               |
+| npm run db:drop                                        | Drop local database                                 |
 
 
 ## Deploy

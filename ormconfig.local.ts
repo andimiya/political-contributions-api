@@ -4,12 +4,12 @@ module.exports = {
   port: 5432,
   username: "postgres",
   database: "auditlogs_api_db_local",
-  entities: [
-    `${__dirname}/src/entities/*.ts`,
-  ],
   migrations: [
     `${__dirname}/src/migration/*.ts`,
   ],
+  cli: {
+    migrationsDir: `src/migration`
+  },
   synchronize: false,
   logging: true,
 }
