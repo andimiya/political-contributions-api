@@ -32,17 +32,22 @@ function rawLogSummarySql(summaryDate: string, summaryDateTime: string, ids: str
   return `
     SELECT
       ${mccmncCaseStatement} AS carrier,
+      mccmnc,
       ${apiCaseStatement} AS service,
+      client_id,
+      error,
+      error_description,
+      acr_value,
+      sdk_version,
       TO_TIMESTAMP('${summaryDateTime}', 'YYYY-MM-DD HH24:MI:SS:MS')::TIMESTAMP as summarized_at,
-      COUNT(DISTINCT(id)) as count,
-      CASE WHEN (status=0) THEN TRUE ELSE FALSE END AS success
+      COUNT(DISTINCT(id)) as count
     FROM raw_logs
     WHERE raw_logs.summarized_at IS NULL AND raw_logs.timestamp::date = '${summaryDate}' AND id IN (${ids})
-    GROUP BY carrier, success, raw_logs.timestamp::date, service`;
+    GROUP BY carrier, mccmnc, service, client_id, error, error_description, acr_value, sdk_version, raw_logs.timestamp::date`;
 }
 
 function insertIntoRawLogSummariesSql(summarySql: string): string {
-  return `INSERT INTO raw_log_summaries (carrier, service, summarized_at, count, success) \
+  return `INSERT INTO raw_log_summaries (carrier, mccmnc, service, client_id, error, error_description, acr_value, sdk_version, summarized_at, count) \
           ${summarySql};`;
 }
 
