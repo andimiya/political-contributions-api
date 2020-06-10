@@ -11,6 +11,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import IsMccmnc from '../validators/isMccmncValidator';
 
 @Entity({ name: 'raw_log_summaries' })
 @Index('index_raw_log_summaries_summarized_at', { synchronize: false })
@@ -22,9 +23,9 @@ export class RawLogSummary {
   @IsString()
   carrier: string;
 
-  @Column('varchar', { nullable: false })
-  @IsString()
-  mccmnc: string;
+  @Column('integer', { nullable: false })
+  @Validate(IsMccmnc)
+  mccmnc: number;
 
   @Column('varchar', { nullable: false })
   @IsString()

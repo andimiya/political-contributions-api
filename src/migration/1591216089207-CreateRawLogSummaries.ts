@@ -26,7 +26,7 @@ export class CreateRawLogSummaries1591216089207 implements MigrationInterface {
           },
           {
             name: 'mccmnc',
-            type: 'varchar',
+            type: 'integer',
             isNullable: false,
           },
           {
