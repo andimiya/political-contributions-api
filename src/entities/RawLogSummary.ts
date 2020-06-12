@@ -9,6 +9,7 @@ import {
   Min,
   IsDate,
   IsOptional,
+  Validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import IsMccmnc from '../validators/isMccmncValidator';
@@ -74,4 +75,12 @@ export class RawLogSummary {
   @Exclude()
   @IsOptional()
   readonly updated_at?: Date;
+
+  async isValid(): Promise<boolean> {
+    return validateClass(this);
+  }
+
+  validationErrors;
+
+  validationErrorMessages;
 }

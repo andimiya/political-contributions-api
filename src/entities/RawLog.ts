@@ -105,60 +105,41 @@ export class RawLog {
   context?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
+  @Validate(IsAcrValue)
   acr_value?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
   sdk_version?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
   event?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
   scopes?: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @IsOptional()
   @IsDate()
   @Exclude()
-  @IsOptional()
   readonly created_at?: Date;
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @IsOptional()
   @IsDate()
   @Exclude()
-  @IsOptional()
   readonly updated_at?: Date;
 
 
   async isValid(): Promise<boolean> {
-    const errors = await validate(this);
-    if (errors && errors.length > 0) {
-      this.validationErrors = errors;
-
-      errors.forEach((err) => {
-        if (!err.constraints) return;
-
-        Object.keys(err.constraints).forEach((key) => {
-          if (!err?.constraints?.[key]) return;
-          this.validationErrorMessages.push(`${err.property}: ${err.constraints[key]}`);
-        });
-      });
-
-      return false;
-    }
-    return true;
-  }
-
-  apiType(): string {
-    if (this.api === undefined) return '';
-    return API[this.api.toString()];
+    return validateClass(this);
   }
 
   validationErrors;
