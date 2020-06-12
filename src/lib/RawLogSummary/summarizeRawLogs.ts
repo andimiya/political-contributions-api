@@ -11,19 +11,6 @@ const mccmncCaseStatement = `
   END
 `;
 
-const apiCaseStatement = `
-  CASE
-    WHEN api=0 THEN 'authorize'
-    WHEN api=1 THEN 'token'
-    WHEN api=2 THEN 'userinfo'
-    WHEN api=3 THEN 'userinfo2'
-    WHEN api=4 THEN 'usertrait'
-    WHEN api=5 THEN 'create'
-    WHEN api=6 THEN 'provision'
-    WHEN api=7 THEN 'set'
-  END
-`;
-
 function rawLogIdSql(date: string): string {
   return `SELECT id FROM raw_logs WHERE summarized_at IS NULL AND raw_logs.timestamp::date = '${date}'`;
 }
@@ -33,7 +20,8 @@ function rawLogSummarySql(summaryDate: string, summaryDateTime: string, ids: str
     SELECT
       ${mccmncCaseStatement} AS carrier,
       mccmnc,
-      ${apiCaseStatement} AS service,
+      api,
+      flow,
       client_id,
       error,
       error_description,
@@ -43,11 +31,11 @@ function rawLogSummarySql(summaryDate: string, summaryDateTime: string, ids: str
       COUNT(DISTINCT(id)) as count
     FROM raw_logs
     WHERE raw_logs.summarized_at IS NULL AND raw_logs.timestamp::date = '${summaryDate}' AND id IN (${ids})
-    GROUP BY carrier, mccmnc, service, client_id, error, error_description, acr_value, sdk_version, raw_logs.timestamp::date`;
+    GROUP BY carrier, mccmnc, api, flow, client_id, error, error_description, acr_value, sdk_version, raw_logs.timestamp::date`;
 }
 
 function insertIntoRawLogSummariesSql(summarySql: string): string {
-  return `INSERT INTO raw_log_summaries (carrier, mccmnc, service, client_id, error, error_description, acr_value, sdk_version, summarized_at, count) \
+  return `INSERT INTO raw_log_summaries (carrier, mccmnc, api, flow, client_id, error, error_description, acr_value, sdk_version, summarized_at, count) \
           ${summarySql};`;
 }
 

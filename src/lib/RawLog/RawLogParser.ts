@@ -1,7 +1,5 @@
 import * as moment from 'moment';
-import {
-  RawLog, API, STATUS, FLOW,
-} from '../../entities/RawLog';
+import { RawLog, STATUS } from '../../entities/RawLog';
 import RawLogParam from '../../interfaces/RawLogParam';
 
 function validateTimestampGranularity(timestamp: Date): any {
@@ -15,10 +13,10 @@ export default function RawLogParser(params: RawLogParam): RawLog {
 
   const rawLog = new RawLog();
   if (params.flow != undefined) { // eslint-disable-line eqeqeq
-    rawLog.flow = FLOW[params.flow.toLowerCase()];
+    rawLog.flow = params.flow.toLowerCase();
   }
   if (params.api != undefined) { // eslint-disable-line eqeqeq
-    rawLog.api = API[params.api.toLowerCase()];
+    rawLog.api = params.api.toLowerCase();
   }
   if (params.status != undefined) { // eslint-disable-line eqeqeq
     rawLog.status = STATUS[params.status.toLowerCase()];

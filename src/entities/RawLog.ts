@@ -7,28 +7,24 @@ import {
   IsOptional,
   IsEnum,
   Validate,
-  validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import IsMccmnc from '../validators/isMccmncValidator';
+import IsApi from '../validators/isApiValidator';
+import IsFlow from '../validators/isFlowValidator';
+import IsAcrValue from '../validators/isAcrValueValidator';
+import validateClass from '../lib/validateClass';
 
-export enum API {
-  authorize = 0,
-  token = 1,
-  userinfo = 2,
-  userinfo2 = 3,
-  usertrait = 4,
-  create = 5,
-  provision = 6,
-  set = 7
-}
-
-export enum FLOW {
-  pr = 0,
-  se = 1,
-  si = 2,
-  none = 3,
-}
+export const API = [
+  'authorize',
+  'token',
+  'userinfo',
+  'userinfo2',
+  'usertrait',
+  'create',
+  'provision',
+  'set'
+]
 
 export enum STATUS {
   success = 0,
@@ -42,27 +38,17 @@ export class RawLog {
     this.validationErrorMessages = [];
   }
 
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'integer',
-    enum: API,
-    nullable: false,
-  })
-  @IsEnum(API)
-  api: API;
+  @Column('varchar', { nullable: false })
+  @Validate(IsApi)
+  api: string;
 
-  @Column({
-    type: 'integer',
-    enum: FLOW,
-    nullable: false,
-    default: FLOW.none,
-  })
-  @IsEnum(FLOW)
+  @Column('varchar', { nullable: false })
   @IsOptional()
-  flow: FLOW;
+  @Validate(IsFlow)
+  flow: string;
 
   @Column({
     type: 'integer',

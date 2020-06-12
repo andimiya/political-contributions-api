@@ -19,14 +19,13 @@ export class CreateRawLogs1591113478512 implements MigrationInterface {
           },
           {
             name: 'api',
-            type: 'integer',
+            type: 'varchar',
             isNullable: false,
           },
           {
             name: 'flow',
-            type: 'integer',
-            isNullable: false,
-            default: 3,
+            type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'mccmnc',

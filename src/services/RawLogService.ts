@@ -44,7 +44,7 @@ export default class RawLogService {
   }
 
   isValidApi(rawLog: RawLog): boolean { // eslint-disable-line class-methods-use-this
-    switch (rawLog.apiType()) {
+    switch (rawLog.api) {
       case 'authorize':
         return apiValidators.validateAuthorizeApi(rawLog);
       case 'token':
