@@ -12,6 +12,7 @@ import {
   Validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import validateClass from '../lib/validateClass';
 import IsMccmnc from '../validators/isMccmncValidator';
 import IsApi from '../validators/isApiValidator';
 import IsFlow from '../validators/isFlowValidator';

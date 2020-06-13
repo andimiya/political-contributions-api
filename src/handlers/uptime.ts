@@ -1,4 +1,6 @@
-const up = (): any => ({
+import Response from '../interfaces/Response';
+
+const up = (): Response => ({
   statusCode: 200,
   headers: {},
   body: JSON.stringify({ status: 'ok' }),

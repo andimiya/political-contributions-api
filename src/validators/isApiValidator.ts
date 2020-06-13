@@ -1,7 +1,17 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["validate", "defaultMessage"] }] */
 
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-import { API } from '../entities/RawLog';
+
+const API = [
+  'authorize',
+  'token',
+  'userinfo',
+  'userinfo2',
+  'usertrait',
+  'create',
+  'provision',
+  'set',
+];
 
 @ValidatorConstraint({ name: 'isApi', async: false })
 export default class IsApi implements ValidatorConstraintInterface {

@@ -10,21 +10,10 @@ import {
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import IsMccmnc from '../validators/isMccmncValidator';
-import IsApi from '../validators/isApiValidator';
+import IsApi from '../validators/isApiValidator'; // eslint-disable-line import/no-cycle
 import IsFlow from '../validators/isFlowValidator';
 import IsAcrValue from '../validators/isAcrValueValidator';
 import validateClass from '../lib/validateClass';
-
-export const API = [
-  'authorize',
-  'token',
-  'userinfo',
-  'userinfo2',
-  'usertrait',
-  'create',
-  'provision',
-  'set'
-]
 
 export enum STATUS {
   success = 0,

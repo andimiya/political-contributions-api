@@ -13,5 +13,6 @@ module.exports = {
   ignorePatterns: ['node_modules/', '.build/', '.serverless/'],
   rules: {
     '@typescript-eslint/no-explicit-any': 0,
+    'radix': 0,
   }
 };

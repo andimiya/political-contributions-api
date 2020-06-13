@@ -3,10 +3,11 @@
 
 import { Connection } from 'typeorm';
 import { RawLog } from '../entities/RawLog';
+import Response from '../interfaces/Response';
+import { response } from '../lib/HTTPResponse';
 import RawLogParser from '../lib/RawLog/RawLogParser';
 import RawLogParam from '../interfaces/RawLogParam';
 import InvalidRawLogResponse from '../interfaces/InvalidRawLogResponse';
-import RawLogResponse from '../interfaces/RawLogResponse';
 import apiValidators from '../lib/RawLog/apiValidators';
 import mccmnc from '../lib/mccmnc';
 
@@ -20,13 +21,14 @@ export default class RawLogService {
     this.invalidLogs = [];
   }
 
-  async createRawLog(): Promise<RawLogResponse> {
+  async createRawLog(): Promise<Response> {
     await Promise.all(this.logs.map((log) => this.validateAndSave(log)));
 
-    return {
+    const body = {
       record_count: this.validLogs,
       errors: this.invalidLogs,
     };
+    return response(body, 201);
   }
 
   static invalidLogResponse(rawLog: RawLog, log: RawLogParam): InvalidRawLogResponse {

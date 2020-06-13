@@ -2,17 +2,15 @@
 
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
+const CARRIERS = ['att', 'tmobile', 'sprint', 'verizon'];
+
 @ValidatorConstraint({ name: 'isCarrier', async: false })
 export default class IsCarrier implements ValidatorConstraintInterface {
   validate(value: string): boolean {
-    const lowerValue = value.toLowerCase();
-    return lowerValue === 'att'
-           || lowerValue === 'tmobile'
-           || lowerValue === 'sprint'
-           || lowerValue === 'verizon';
+    return CARRIERS.includes(value.toLowerCase());
   }
 
   defaultMessage(): string {
-    return 'Must be a valid carrier of: att, tmobile, verizon or sprint';
+    return `Must be a valid carrier of: ${CARRIERS.join(', ')}`;
   }
 }
