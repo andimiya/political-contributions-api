@@ -26,12 +26,13 @@ provider:
     - value: ${file(./env.yaml):${opt:stage, self:provider.stage}.api_key}
 
 functions:
-  test:
-    name: test-${opt:stage, self:provider.stage}
-    handler: src/handlers/logs.test
+  uptime:
+    name: uptime-${opt:stage, self:provider.stage}
+    handler: src/handlers/uptime.up
     events:
       - http:
-          path: test/
+          path: up/
+          method: get
           method: get
   create-logs:
     name: create-logs-${opt:stage, self:provider.stage}
