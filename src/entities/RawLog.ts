@@ -7,28 +7,13 @@ import {
   IsOptional,
   IsEnum,
   Validate,
-  validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import IsMccmnc from '../validators/isMccmncValidator';
-
-export enum API {
-  authorize = 0,
-  token = 1,
-  userinfo = 2,
-  userinfo2 = 3,
-  usertrait = 4,
-  create = 5,
-  provision = 6,
-  set = 7
-}
-
-export enum FLOW {
-  pr = 0,
-  se = 1,
-  si = 2,
-  none = 3,
-}
+import IsApi from '../validators/isApiValidator'; // eslint-disable-line import/no-cycle
+import IsFlow from '../validators/isFlowValidator';
+import IsAcrValue from '../validators/isAcrValueValidator';
+import validateClass from '../lib/validateClass';
 
 export enum STATUS {
   success = 0,
@@ -42,27 +27,17 @@ export class RawLog {
     this.validationErrorMessages = [];
   }
 
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'integer',
-    enum: API,
-    nullable: false,
-  })
-  @IsEnum(API)
-  api: API;
+  @Column('varchar', { nullable: false })
+  @Validate(IsApi)
+  api: string;
 
-  @Column({
-    type: 'integer',
-    enum: FLOW,
-    nullable: false,
-    default: FLOW.none,
-  })
-  @IsEnum(FLOW)
+  @Column('varchar', { nullable: false })
   @IsOptional()
-  flow: FLOW;
+  @Validate(IsFlow)
+  flow: string;
 
   @Column({
     type: 'integer',
@@ -119,60 +94,41 @@ export class RawLog {
   context?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
+  @Validate(IsAcrValue)
   acr_value?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
   sdk_version?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
   event?: string;
 
   @Column('varchar', { nullable: true })
-  @IsString()
   @IsOptional()
+  @IsString()
   scopes?: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @IsOptional()
   @IsDate()
   @Exclude()
-  @IsOptional()
   readonly created_at?: Date;
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @IsOptional()
   @IsDate()
   @Exclude()
-  @IsOptional()
   readonly updated_at?: Date;
 
 
   async isValid(): Promise<boolean> {
-    const errors = await validate(this);
-    if (errors && errors.length > 0) {
-      this.validationErrors = errors;
-
-      errors.forEach((err) => {
-        if (!err.constraints) return;
-
-        Object.keys(err.constraints).forEach((key) => {
-          if (!err?.constraints?.[key]) return;
-          this.validationErrorMessages.push(`${err.property}: ${err.constraints[key]}`);
-        });
-      });
-
-      return false;
-    }
-    return true;
-  }
-
-  apiType(): string {
-    if (this.api === undefined) return '';
-    return API[this.api.toString()];
+    return validateClass(this);
   }
 
   validationErrors;

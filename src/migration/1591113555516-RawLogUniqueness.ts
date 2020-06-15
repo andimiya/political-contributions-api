@@ -10,11 +10,11 @@ export class RawLogUniqueness1591113555516 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       "CREATE UNIQUE INDEX \"raw_logs_uniqueness_index\" ON \"raw_logs\" \
-            (api, flow, status, mccmnc, timestamp, client_id, COALESCE(redirect_uri, ''), \
+            (api, status, mccmnc, timestamp, client_id, COALESCE(redirect_uri, ''), \
             correlation_id, COALESCE(usertrait, ''), COALESCE(error, ''), \
             COALESCE(error_description, ''), sub, COALESCE(context, ''), \
             COALESCE(acr_value, ''), COALESCE(sdk_version, ''), \
-            COALESCE(event, ''), COALESCE(scopes, ''))",
+            COALESCE(event, ''), COALESCE(scopes, ''), COALESCE(flow, ''))",
     );
   }
 

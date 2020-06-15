@@ -26,13 +26,18 @@ export class CreateRawLogSummaries1591216089207 implements MigrationInterface {
           },
           {
             name: 'mccmnc',
+            type: 'integer',
+            isNullable: false,
+          },
+          {
+            name: 'api',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'service',
+            name: 'flow',
             type: 'varchar',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'count',
@@ -57,7 +62,7 @@ export class CreateRawLogSummaries1591216089207 implements MigrationInterface {
           {
             name: 'acr_value',
             type: 'varchar',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'sdk_version',

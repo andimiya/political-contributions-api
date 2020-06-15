@@ -9,8 +9,14 @@ import {
   Min,
   IsDate,
   IsOptional,
+  Validate,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import validateClass from '../lib/validateClass';
+import IsMccmnc from '../validators/isMccmncValidator';
+import IsApi from '../validators/isApiValidator';
+import IsFlow from '../validators/isFlowValidator';
+import IsAcrValue from '../validators/isAcrValueValidator';
 
 @Entity({ name: 'raw_log_summaries' })
 @Index('index_raw_log_summaries_summarized_at', { synchronize: false })
@@ -22,13 +28,18 @@ export class RawLogSummary {
   @IsString()
   carrier: string;
 
-  @Column('varchar', { nullable: false })
-  @IsString()
-  mccmnc: string;
+  @Column('integer', { nullable: false })
+  @Validate(IsMccmnc)
+  mccmnc: number;
 
   @Column('varchar', { nullable: false })
-  @IsString()
-  service: string;
+  @Validate(IsApi)
+  api: string;
+
+  @Column('varchar', { nullable: true })
+  @IsOptional()
+  @Validate(IsFlow)
+  flow: string;
 
   @Column('varchar', { nullable: false })
   @IsString()
@@ -44,8 +55,9 @@ export class RawLogSummary {
   @IsString()
   error_description?: string;
 
-  @Column('varchar', { nullable: false })
-  @IsString()
+  @Column('varchar', { nullable: true })
+  @IsOptional()
+  @Validate(IsAcrValue)
   acr_value: string;
 
   @Column('varchar', { nullable: true })
@@ -73,4 +85,12 @@ export class RawLogSummary {
   @Exclude()
   @IsOptional()
   readonly updated_at?: Date;
+
+  async isValid(): Promise<boolean> {
+    return validateClass(this);
+  }
+
+  validationErrors;
+
+  validationErrorMessages;
 }
