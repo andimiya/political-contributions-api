@@ -1,4 +1,4 @@
-import { validate } from 'class-validator';
+import { validate } from "class-validator";
 
 export default async function validateClass(classObj: any): Promise<boolean> {
   const errors = await validate(classObj);
@@ -10,7 +10,9 @@ export default async function validateClass(classObj: any): Promise<boolean> {
 
       Object.keys(err.constraints).forEach((key) => {
         if (!err?.constraints?.[key]) return;
-        classObj.validationErrorMessages.push(`${err.property}: ${err.constraints[key]}`);
+        classObj.validationErrorMessages.push(
+          `${err.property}: ${err.constraints[key]}`
+        );
       });
     });
 

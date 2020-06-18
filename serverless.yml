@@ -4,7 +4,7 @@
 # with Serverlesson AWS Lambda:
 # https://www.serverless.com/framework/docs/providers/aws/events/apigateway/
 
-service: auditlog-api
+service: political-contributions-api
 frameworkVersion: "=1.70.0"
 
 plugins:
@@ -13,14 +13,14 @@ plugins:
 
 custom:
   sentry:
-    dsn: https://1504b932aac241b9829ac8f543e703b6:75170a5ff33d46588e863e59992372cf@sentry.io/300108
+    dsn: https://b45d0fc373a64ada951b41c67a081134@o408459.ingest.sentry.io/5279299
 
 provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'local'}
   region: us-west-2
-  profile: auditlogs-api-serverless
+  profile: political-contributions-api-serverless
   environment: ${file(./env.yaml):${opt:stage, self:provider.stage}}
   apiKeys:
     - value: ${file(./env.yaml):${opt:stage, self:provider.stage}.api_key}
@@ -34,31 +34,31 @@ functions:
           path: up/
           method: get
           private: true
-  query-logs:
-    name: query-logs-${opt:stage, self:provider.stage}
-    handler: src/handlers/logs.query
+  ca-contributions:
+    name: ca-contributions-${opt:stage, self:provider.stage}
+    handler: src/handlers/caContributions.query
     events:
       - http:
-          path: logs/
+          path: caContributions/
           method: get
           private: true
-  create-logs:
-    name: create-logs-${opt:stage, self:provider.stage}
-    handler: src/handlers/logs.create
-    events:
-      - http:
-          path: att/
-          method: post
-          private: true
-      - http:
-          path: tmobile/
-          method: post
-          private: true
-      - http:
-          path: verizon/
-          method: post
-          private: true
-      - http:
-          path: sprint/
-          method: post
-          private: true
+  # create-logs:
+  #   name: create-logs-${opt:stage, self:provider.stage}
+  #   handler: src/handlers/logs.create
+  #   events:
+  #     - http:
+  #         path: att/
+  #         method: post
+  #         private: true
+  #     - http:
+  #         path: tmobile/
+  #         method: post
+  #         private: true
+  #     - http:
+  #         path: verizon/
+  #         method: post
+  #         private: true
+  #     - http:
+  #         path: sprint/
+  #         method: post
+  #         private: true

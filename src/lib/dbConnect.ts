@@ -1,15 +1,14 @@
-import { createConnection, ConnectionOptions, Connection } from 'typeorm';
-import { RawLog } from '../entities/RawLog';
-import { RawLogSummary } from '../entities/RawLogSummary';
+import { createConnection, ConnectionOptions, Connection } from "typeorm";
+import { CAContributions } from "../entities/CAContributions";
 
 const connectionConfig: ConnectionOptions = {
-  type: 'postgres',
+  type: "postgres",
   host: process.env.aws_db_host,
   port: 5432,
   username: process.env.aws_db_username,
   password: process.env.aws_db_password,
   database: process.env.aws_db_name,
-  entities: [RawLog, RawLogSummary],
+  entities: [CAContributions],
   synchronize: false,
   logging: true,
 };

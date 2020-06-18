@@ -1,6 +1,10 @@
-import Response from '../interfaces/Response';
+import Response from "../interfaces/Response";
 
-function response(body: object, statusCode = 200, headers: object = {}): Response {
+function response(
+  body: object,
+  statusCode = 200,
+  headers: object = {}
+): Response {
   return {
     headers,
     statusCode,
@@ -16,8 +20,4 @@ function invalidResponse(errMsg: string, statusCode = 400): Response {
   return response({ error: errMsg }, statusCode);
 }
 
-export {
-  response,
-  errorResponse,
-  invalidResponse,
-};
+export { response, errorResponse, invalidResponse };
